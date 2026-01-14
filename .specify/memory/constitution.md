@@ -1,7 +1,7 @@
 <!-- SYNC IMPACT REPORT
-Version change: 1.2.0 → 1.3.0
-Modified principles: None (new sections added)
-Added sections: Performance Testing and Optimization, Backup and Disaster Recovery, API Design and Versioning Standards, Environment Management
+Version change: 1.3.0 → 1.4.0
+Modified principles: Several principles clarified to remove vagueness
+Added sections: None
 Removed sections: None
 Templates requiring updates:
 - ✅ .specify/templates/plan-template.md - Updated to align with new principles
@@ -83,10 +83,10 @@ Qwen CLI (and any AI agent) working on this project MUST:
 ## Architecture Principles
 
 ### 1. Clean Code Standards
-- **Naming**: Descriptive variable/function names (no single letters except loop indices)
+- **Naming**: Descriptive variable/function names using camelCase for JavaScript/TypeScript and snake_case for Python (no single letters except loop indices i, j, k)
 - **Structure**: Separate concerns - models, routes, services, utilities
 - **DRY**: Don't Repeat Yourself - extract common patterns
-- **Error Handling**: Always handle exceptions gracefully with user-friendly messages
+- **Error Handling**: Always handle exceptions using structured error responses with appropriate HTTP status codes (4xx for client errors, 5xx for server errors) and standardized error message format
 - **Type Safety**: Use type hints in Python, TypeScript in frontend
 - **Comments**: Every function/class must have docstrings explaining purpose, params, returns
 - **Task Traceability**: Every file must have header comment: `# [Task]: T-XXX | [From]: speckit.specify §X.Y`
@@ -100,10 +100,10 @@ Qwen CLI (and any AI agent) working on this project MUST:
 - **HTTPS**: All production deployments must use HTTPS
 
 ### 3. Performance Expectations
-- **API Response Time**: < 200ms for CRUD operations
+- **API Response Time**: < 200ms for CREATE, < 100ms for READ, < 150ms for UPDATE, < 100ms for DELETE operations
 - **Database Queries**: Use indexes on user_id, completed, created_at
 - **Frontend**: Server-side rendering by default, client components only when needed
-- **Caching**: Implement where appropriate (e.g., user session data)
+- **Caching**: Implement Redis caching for user session data and frequently accessed resources (cache hit ratio > 90%)
 - **Async/Await**: Use async patterns for I/O operations in Python and TypeScript
 
 ### 4. Scalability Mindset
@@ -210,7 +210,7 @@ hackathon-todo/
 ## Quality Standards
 
 ### Code Quality
-- **Test Coverage**: Minimum 80% for business logic
+- **Test Coverage**: Minimum 80% for business logic (functions that implement core features like task creation, deletion, updates, etc.)
 - **Linting**: All code must pass linter (Ruff for Python, ESLint for TypeScript)
 - **Formatting**: Consistent formatting (Black for Python, Prettier for TypeScript)
 - **No Dead Code**: Remove unused imports, functions, variables
@@ -341,8 +341,8 @@ hackathon-todo/
 - GDPR compliance for user data
 
 ### Vulnerability Management
-- Regular dependency scanning
-- Penetration testing schedule
+- Dependency scanning weekly using automated tools (GitHub Dependabot or similar)
+- Penetration testing quarterly or after major releases
 - Security incident response plan
 - Bug bounty program considerations
 
@@ -369,10 +369,10 @@ hackathon-todo/
 ## Performance Testing and Optimization
 
 ### Performance Testing Requirements
-- Load testing for each phase to validate performance benchmarks
-- Stress testing to identify breaking points
-- Endurance testing for long-running operations
-- Resource utilization monitoring during tests
+- Load testing for each completed feature/phase to validate performance benchmarks (measured with Apache Bench or similar tools)
+- Stress testing to identify breaking points (target: handle 2x expected peak load)
+- Endurance testing for long-running operations (8-hour continuous operation)
+- Resource utilization monitoring during tests (CPU < 70%, Memory < 80% under normal load)
 
 ### Performance Optimization Strategies
 - Profile code to identify bottlenecks
@@ -384,7 +384,7 @@ hackathon-todo/
 ## Backup and Disaster Recovery
 
 ### Backup Procedures
-- Daily automated backups of all critical data
+- Daily automated backups of all critical data (user accounts, tasks, preferences, and application settings)
 - Database snapshots before major updates
 - Version-controlled specification documents backed up to multiple locations
 - Encrypted backup storage with access controls
@@ -399,7 +399,7 @@ hackathon-todo/
 
 ### API Design Principles
 - RESTful design for HTTP APIs
-- Consistent naming conventions for endpoints and resources
+- Consistent naming conventions using kebab-case for endpoints and camelCase for properties (e.g., /user-tasks, { taskId: 123 })
 - Standardized error response format
 - Comprehensive API documentation with examples
 - Rate limiting and throttling mechanisms
@@ -430,7 +430,7 @@ hackathon-todo/
 - Role-based access to different environments
 - Audit logging for environment access
 - Secure credential management
-- Regular access reviews and cleanup
+- Monthly access reviews and cleanup
 
 ## Success Criteria
 
@@ -536,10 +536,10 @@ A spec is considered "complete" when it contains:
 - ✅ No ambiguous terms (all domain concepts defined)
 
 **Spec Clarity Score**: Rate 1-5 on:
-- Clarity (no ambiguous language)
-- Completeness (all scenarios covered)
-- Testability (can write tests from spec alone)
-- Traceability (links to architecture/requirements)
+- Clarity (no ambiguous language): 1=Many unclear terms, 3=Some unclear terms, 5=All terms clearly defined
+- Completeness (all scenarios covered): 1=Major gaps, 3=Minor gaps, 5=All scenarios covered
+- Testability (can write tests from spec alone): 1=Cannot write tests, 3=Can write basic tests, 5=Can write comprehensive tests
+- Traceability (links to architecture/requirements): 1=No links, 3=Some links, 5=Complete traceability
 
 **Minimum acceptable score: 4/5 before implementation**
 
@@ -622,11 +622,13 @@ A spec is considered "complete" when it contains:
 - [ ] No extra features not in spec
 - [ ] Error handling implemented as specified
 - [ ] Type hints/TypeScript types present
-- [ ] Tests pass (>80% coverage)
+- [ ] Tests pass (>80% coverage for business logic functions)
 - [ ] Linter passes with no warnings
-- [ ] Performance meets phase benchmarks
+- [ ] Performance meets phase benchmarks (response times, throughput, resource usage)
 - [ ] Security checks pass (no hardcoded secrets, SQL injection safe)
 - [ ] Documentation/comments explain complex logic
+- [ ] Code follows naming conventions (camelCase for JS/TS, snake_case for Python)
+- [ ] API endpoints use kebab-case and properties use camelCase
 
 **If validation fails:** Document issue and refine spec, do not manually patch code.
 
@@ -651,7 +653,7 @@ A spec is considered "complete" when it contains:
 
 ### Risk: Qwen CLI Becomes Unavailable
 
-**Probability:** Low | **Impact:** Critical
+**Probability:** Low (1-20% chance) | **Impact:** Critical (stops all development)
 
 **Contingency Plan:**
 1. **Immediate**: Switch to alternative AI CLI (Claude Code, GitHub Copilot CLI, or GPT-4 with custom wrapper)
@@ -666,7 +668,7 @@ A spec is considered "complete" when it contains:
 
 ### Risk: AI-Generated Code Consistently Fails Quality
 
-**Probability:** Medium | **Impact:** High
+**Probability:** Medium (21-60% chance) | **Impact:** High (delays development by 1-2 weeks)
 
 **Contingency Plan:**
 1. **After 5 consecutive failures**: Pause and review approach
@@ -681,11 +683,11 @@ A spec is considered "complete" when it contains:
 **Prevention**:
 - Start with simple tasks to validate AI agent capability
 - Build complexity gradually
-- Keep task scope small (< 50 lines per task)
+- Keep task scope limited to single functionality (e.g., implement one endpoint, add one validation rule, create one UI component)
 
 ### Risk: Planned Tools Become Obsolete
 
-**Probability:** Low | **Impact:** Medium
+**Probability:** Low (1-20% chance) | **Impact:** Medium (requires 1-2 days to switch tools)
 
 **Contingency Plan:**
 1. **For Infrastructure Tools** (Docker, K8s, Helm):
@@ -708,7 +710,7 @@ A spec is considered "complete" when it contains:
 
 ### Risk: Data Loss in Specification Documents
 
-**Probability:** Low | **Impact:** Critical
+**Probability:** Low (1-20% chance) | **Impact:** Critical (could require 1-2 weeks to recreate specs)
 
 **Contingency Plan:**
 1. **Git as Primary Backup**: All specs in version control
@@ -898,8 +900,9 @@ git push origin feature/T-001-add-task
 | 1.1 | 2026-01-14 | Added error handling, metrics, oversight, risk management, and version control sections per Qwen CLI feedback |
 | 1.2 | 2026-01-14 | Added testing strategy, monitoring, security, and documentation standards |
 | 1.3 | 2026-01-14 | Added performance testing, backup/recovery, API standards, and environment management |
+| 1.4 | 2026-01-14 | Clarified ambiguous statements and improved quality checks |
 
 ## Governance
 This constitution serves as the governing document for the Todo Evolution project. All development activities must comply with the principles and constraints outlined herein. Amendments to this constitution require explicit approval and must be documented with clear rationale.
 
-**Version**: 1.3.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-01-14
+**Version**: 1.4.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-01-14
