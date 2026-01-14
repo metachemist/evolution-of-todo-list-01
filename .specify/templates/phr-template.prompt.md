@@ -4,7 +4,7 @@ title: {{TITLE}}
 stage: {{STAGE}}
 date: {{DATE_ISO}}
 surface: {{SURFACE}}
-model: {{MODEL}}
+model: "{{MODEL}}"
 feature: {{FEATURE}}
 branch: {{BRANCH}}
 user: {{USER}}
