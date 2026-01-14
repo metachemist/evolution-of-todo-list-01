@@ -1,15 +1,14 @@
 <!-- SYNC IMPACT REPORT
-Version change: 1.3.0 → 1.4.0
-Modified principles: Several principles clarified to remove vagueness
+Version change: 1.4.0 → 1.5.0
+Modified principles: Project structure section updated to match requested monorepo layout
 Added sections: None
 Removed sections: None
 Templates requiring updates:
-- ✅ .specify/templates/plan-template.md - Updated to align with new principles
-- ✅ .specify/templates/spec-template.md - Updated to align with new principles
-- ✅ .specify/templates/tasks-template.md - Updated to align with new principles
-- ⚠️  .specify/templates/commands/*.md - May need updates for agent-specific references
-- ⚠️  README.md - May need updates to reference new principles
-Follow-up TODOs: None
+- ⚠️  .specify/templates/plan-template.md - May need updates to reference new project structure
+- ⚠️  .specify/templates/spec-template.md - May need updates to reference new project structure
+- ⚠️  .specify/templates/tasks-template.md - May need updates to reference new project structure
+- ⚠️  README.md - May need updates to reference new project structure
+Follow-up TODOs: Review and update templates to align with new project structure
 -->
 
 # Todo Evolution - From CLI to Cloud-Native AI Constitution
@@ -116,59 +115,62 @@ Qwen CLI (and any AI agent) working on this project MUST:
 ## Project Structure (Monorepo)
 
 ```
-hackathon-todo/
-├── constitution.md                 # This file
-├── AGENTS.md                      # AI agent instructions (Qwen CLI + future agents)
-├── QWEN.md                        # Qwen CLI-specific configuration (shim to AGENTS.md)
-├── README.md                      # Project overview and setup
-├── .spec-kit/
-│   └── config.yaml               # Spec-Kit configuration
-├── specs/
-│   ├── overview.md               # Project overview
-│   ├── architecture.md           # System architecture diagrams
-│   ├── features/                 # Feature specifications (WHAT)
-│   │   ├── task-crud.md
-│   │   ├── authentication.md
-│   │   └── chatbot.md
-│   ├── api/                      # API specifications
-│   │   ├── rest-endpoints.md
-│   │   └── mcp-tools.md
-│   ├── database/                 # Database specifications
-│   │   └── schema.md
-│   ├── ui/                       # UI specifications
-│   │   ├── components.md
-│   │   └── pages.md
-│   ├── plans/                    # Technical plans (HOW)
-│   │   ├── phase1-plan.md
-│   │   ├── phase2-plan.md
-│   │   └── ...
-│   └── tasks/                    # Task breakdowns (BREAKDOWN)
-│       ├── phase1-tasks.md
-│       ├── phase2-tasks.md
-│       └── ...
-├── phase1-console/               # Phase I: Console app
+evolution-of-todo-list-01/
+├── constitution.md                 # The Supreme Law (Principles & Constraints)
+├── AGENTS.md                      # AI Agent Instructions (The "How-To")
+├── QWEN.md                        # CLI entry point (Shim to AGENTS.md)
+├── README.md                      # Project onboarding
+│
+├── .specify/                      # SpecifyPlus Tool Configuration
+│   ├── config.yaml               # Tool settings
+│   └── templates/                # Templates for Spec/Plan/Task generation
+│       ├── spec-template.md
+│       ├── plan-template.md
+│       └── tasks-template.md
+│
+├── specs/                         # The Source of Truth (Lifecycle Stages)
+│   │
+│   ├── 1-specify/                # STEP 1: WHAT (Requirements & Context)
+│   │   ├── system-overview.md    # High-level goals
+│   │   ├── features/             # Feature Requirements
+│   │   │   ├── feature-01-task-crud.md
+│   │   │   ├── feature-02-auth.md
+│   │   │   └── ...
+│   │   ├── domain/               # Domain Rules & Entities
+│   │   └── user-journeys/        # User Stories
+│   │
+│   ├── 2-plan/                   # STEP 2: HOW (Architecture & Design)
+│   │   ├── phase-1-console.md
+│   │   ├── phase-2-fullstack.md
+│   │   ├── api-specs/            # API Contracts (OpenAPI/MCP)
+│   │   ├── db-schema/            # Data Models (SQLModel)
+│   │   └── ui-design/            # Component Architecture
+│   │
+│   └── 3-tasks/                  # STEP 3: EXECUTE (Atomic Units)
+│       ├── phase-1/
+│       │   ├── T-001-setup.md
+│       │   ├── T-002-core-logic.md
+│       │   └── ...
+│       └── phase-2/
+│           └── ...
+│
+├── src/                           # STEP 4: IMPLEMENTATION (Phase I)
+│   ├── core/
+│   ├── cli/
+│   └── tests/
+│
+├── frontend/                      # STEP 4: IMPLEMENTATION (Phase II+)
 │   ├── src/
-│   ├── tests/
-│   └── README.md
-├── frontend/                      # Phase II+: Next.js app
-│   ├── QWEN.md                   # Frontend-specific instructions
-│   ├── app/
-│   ├── components/
-│   ├── lib/
-│   └── README.md
-├── backend/                       # Phase II+: FastAPI app
-│   ├── QWEN.md                   # Backend-specific instructions
-│   ├── main.py
-│   ├── models.py
-│   ├── routes/
-│   ├── services/
-│   └── README.md
-├── k8s/                          # Phase IV+: Kubernetes manifests
-│   ├── helm-charts/
-│   └── deployments/
-├── docker-compose.yml            # Local development
-└── .github/
-    └── workflows/                # CI/CD pipelines
+│   └── ...
+│
+├── backend/                       # STEP 4: IMPLEMENTATION (Phase II+)
+│   ├── src/
+│   └── ...
+│
+├── infra/                         # STEP 4: INFRASTRUCTURE (Phase IV+)
+    ├── k8s/
+    ├── docker/
+    └── helm/
 ```
 
 ## Development Workflow (Agentic Dev Stack)
@@ -901,8 +903,9 @@ git push origin feature/T-001-add-task
 | 1.2 | 2026-01-14 | Added testing strategy, monitoring, security, and documentation standards |
 | 1.3 | 2026-01-14 | Added performance testing, backup/recovery, API standards, and environment management |
 | 1.4 | 2026-01-14 | Clarified ambiguous statements and improved quality checks |
+| 1.5 | 2026-01-14 | Updated project structure to match evolution-of-todo-list-01 monorepo layout |
 
 ## Governance
 This constitution serves as the governing document for the Todo Evolution project. All development activities must comply with the principles and constraints outlined herein. Amendments to this constitution require explicit approval and must be documented with clear rationale.
 
-**Version**: 1.4.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-01-14
+**Version**: 1.5.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-01-14
