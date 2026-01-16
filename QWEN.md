@@ -103,7 +103,7 @@ After completing requests, you **MUST** create a PHR (Prompt History Record).
 
 ### 4. Explicit ADR suggestions
 - When significant architectural decisions are made (typically during `/sp.plan` and sometimes `/sp.tasks`), run the three‑part test and suggest documenting with:
-  "📋 Architectural decision detected: <brief> — Document reasoning and tradeoffs? Run `/sp.adr <decision-title>`"
+  "Architectural decision detected: <brief> — Document reasoning and tradeoffs? Run `/sp.adr <decision-title>`"
 - Wait for user consent; never auto‑create the ADR.
 
 ### 5. Human as Tool Strategy
@@ -191,7 +191,7 @@ After design/architecture work, test for ADR significance:
 - Scope: cross‑cutting and influences system design?
 
 If ALL true, suggest:
-📋 Architectural decision detected: [brief-description]
+ Architectural decision detected: [brief-description]
    Document reasoning and tradeoffs? Run `/sp.adr [decision-title]`
 
 Wait for consent; never auto-create ADRs. Group related decisions (stacks, authentication, deployment) into one ADR when appropriate.
