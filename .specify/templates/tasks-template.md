@@ -20,9 +20,11 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- **Single project**: `evolution-of-todo-list-01/src/`, `evolution-of-todo-list-01/tests/` at repository root
+- **Web app**: `evolution-of-todo-list-01/backend/src/`, `evolution-of-todo-list-01/frontend/src/`
+- **Mobile**: `evolution-of-todo-list-01/api/src/`, `evolution-of-todo-list-01/ios/src/` or `evolution-of-todo-list-01/android/src/`
+- **Specs**: `evolution-of-todo-list-01/specs/1-specify/`, `evolution-of-todo-list-01/specs/2-plan/`, `evolution-of-todo-list-01/specs/3-tasks/`
+- **Configuration**: `evolution-of-todo-list-01/.specify/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
 <!-- 

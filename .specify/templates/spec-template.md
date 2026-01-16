@@ -11,7 +11,7 @@
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
+
   Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
   Think of each story as a standalone slice of functionality that can be:
   - Developed independently
@@ -74,6 +74,69 @@
 
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
+
+### Project Structure Alignment
+
+Verify that this feature specification aligns with the project's monorepo structure:
+
+```
+evolution-of-todo-list-01/
+├── constitution.md                 # The Supreme Law (Principles & Constraints)
+├── AGENTS.md                      # AI Agent Instructions (The "How-To")
+├── QWEN.md                        # CLI entry point (Shim to AGENTS.md)
+├── README.md                      # Project onboarding
+│
+├── .specify/                      # SpecifyPlus Tool Configuration
+│   ├── config.yaml               # Tool settings
+│   └── templates/                # Templates for Spec/Plan/Task generation
+│       ├── spec-template.md
+│       ├── plan-template.md
+│       └── tasks-template.md
+│
+├── specs/                         # The Source of Truth (Lifecycle Stages)
+│   │
+│   ├── 1-specify/                # STEP 1: WHAT (Requirements & Context)
+│   │   ├── system-overview.md    # High-level goals
+│   │   ├── features/             # Feature Requirements
+│   │   │   ├── feature-01-task-crud.md
+│   │   │   ├── feature-02-auth.md
+│   │   │   └── ...
+│   │   ├── domain/               # Domain Rules & Entities
+│   │   └── user-journeys/        # User Stories
+│   │
+│   ├── 2-plan/                   # STEP 2: HOW (Architecture & Design)
+│   │   ├── phase-1-console.md
+│   │   ├── phase-2-fullstack.md
+│   │   ├── api-specs/            # API Contracts (OpenAPI/MCP)
+│   │   ├── db-schema/            # Data Models (SQLModel)
+│   │   └── ui-design/            # Component Architecture
+│   │
+│   └── 3-tasks/                  # STEP 3: EXECUTE (Atomic Units)
+│       ├── phase-1/
+│       │   ├── T-001-setup.md
+│       │   ├── T-002-core-logic.md
+│       │   └── ...
+│       └── phase-2/
+│           └── ...
+│
+├── src/                           # STEP 4: IMPLEMENTATION (Phase I)
+│   ├── core/
+│   ├── cli/
+│   └── tests/
+│
+├── frontend/                      # STEP 4: IMPLEMENTATION (Phase II+)
+│   ├── src/
+│   └── ...
+│
+├── backend/                       # STEP 4: IMPLEMENTATION (Phase II+)
+│   ├── src/
+│   └── ...
+│
+├── infra/                         # STEP 4: INFRASTRUCTURE (Phase IV+)
+    ├── k8s/
+    ├── docker/
+    └── helm/
+```
 
 ## Requirements *(mandatory)*
 
