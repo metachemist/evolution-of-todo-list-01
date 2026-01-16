@@ -1,70 +1,70 @@
-# evolution-of-todo-list-01
+# Todo Evolution - From CLI to Cloud-Native AI
 
-This project follows a spec-driven development approach with a well-defined monorepo structure:
+This project demonstrates the evolution of a simple todo application from a command-line interface to a cloud-native AI-powered system. The progression occurs in phases, with each building upon the previous one to create a robust, scalable, and intelligent todo management platform.
 
-```
-evolution-of-todo-list-01/
-├── constitution.md                 # The Supreme Law (Principles & Constraints)
-├── AGENTS.md                      # AI Agent Instructions (The "How-To")
-├── QWEN.md                        # CLI entry point (Shim to AGENTS.md)
-├── README.md                      # Project onboarding
-│
-├── .specify/                      # SpecifyPlus Tool Configuration
-│   ├── config.yaml               # Tool settings
-│   └── templates/                # Templates for Spec/Plan/Task generation
-│       ├── spec-template.md
-│       ├── plan-template.md
-│       └── tasks-template.md
-│
-├── specs/                         # The Source of Truth (Lifecycle Stages)
-│   │
-│   ├── 1-specify/                # STEP 1: WHAT (Requirements & Context)
-│   │   ├── system-overview.md    # High-level goals
-│   │   ├── features/             # Feature Requirements
-│   │   │   ├── feature-01-task-crud.md
-│   │   │   ├── feature-02-auth.md
-│   │   │   └── ...
-│   │   ├── domain/               # Domain Rules & Entities
-│   │   └── user-journeys/        # User Stories
-│   │
-│   ├── 2-plan/                   # STEP 2: HOW (Architecture & Design)
-│   │   ├── phase-1-console.md
-│   │   ├── phase-2-fullstack.md
-│   │   ├── api-specs/            # API Contracts (OpenAPI/MCP)
-│   │   ├── db-schema/            # Data Models (SQLModel)
-│   │   └── ui-design/            # Component Architecture
-│   │
-│   └── 3-tasks/                  # STEP 3: EXECUTE (Atomic Units)
-│       ├── phase-1/
-│       │   ├── T-001-setup.md
-│       │   ├── T-002-core-logic.md
-│       │   └── ...
-│       └── phase-2/
-│           └── ...
-│
-├── src/                           # STEP 4: IMPLEMENTATION (Phase I)
-│   ├── core/
-│   ├── cli/
-│   └── tests/
-│
-├── frontend/                      # STEP 4: IMPLEMENTATION (Phase II+)
-│   ├── src/
-│   └── ...
-│
-├── backend/                       # STEP 4: IMPLEMENTATION (Phase II+)
-│   ├── src/
-│   └── ...
-│
-├── infra/                         # STEP 4: INFRASTRUCTURE (Phase IV+)
-    ├── k8s/
-    ├── docker/
-    └── helm/
+## Phase I: Console Application
+
+The first phase implements a console-based task management application with the following features:
+- Add, Delete, Update, View, and Mark Complete operations
+- In-memory session storage
+- Console-based user interactions
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies with `uv sync`
+3. Run the application with `python src/main.py` or `uv run python -m src.main`
+4. Use the CLI commands to manage tasks
+
+## How to Run
+
+To run the application:
+
+```bash
+# Using uv (recommended)
+uv run python -m src.main
+
+# Or directly with Python
+python src/main.py
 ```
 
-## Getting Started
+## Supported Commands
 
-This project uses a spec-driven development approach where all code is generated from specifications. To get started:
+- `add "title" "optional description"` - Add a new task
+- `view` - Display all tasks
+- `update <id> "title" "optional description"` - Update a task
+- `delete <id>` - Delete a task
+- `complete <id>` - Toggle completion status
+- `exit` - Exit the application
 
-1. Review the `constitution.md` to understand the project principles
-2. Examine the `specs/` directory to understand feature requirements
-3. Follow the development workflow as outlined in the constitution
+### Command Examples
+
+```bash
+# Add a task with title only
+add "Buy groceries"
+
+# Add a task with title and description
+add "Walk the dog" "Take the dog for a 30-minute walk"
+
+# View all tasks
+view
+
+# Update a task
+update 1 "Buy milk and bread" "Get whole milk and sourdough"
+
+# Mark a task as complete/incomplete
+complete 1
+
+# Delete a task
+delete 1
+
+# Exit the application
+exit
+```
+
+## Technologies Used
+
+- Python 3.13+
+- Pydantic for data validation
+- Argparse for CLI parsing
+- Pytest for testing

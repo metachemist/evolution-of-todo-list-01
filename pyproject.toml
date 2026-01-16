@@ -1,0 +1,30 @@
+[project]
+name = "evolution-of-todo-list-01"
+version = "0.1.0"
+description = "Todo Evolution - From CLI to Cloud-Native AI"
+authors = [
+    {name = "metachemist", email = "metachemist@example.com"}
+]
+dependencies = [
+    "pydantic>=2.5.0",
+    "argparse>=1.4.0",
+    "pytest>=7.4.0",
+]
+readme = "README.md"
+requires-python = ">= 3.13"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+todo-cli = "src.main:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

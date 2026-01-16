@@ -82,7 +82,6 @@ prompt_text: |
   │   │   ├── db-schema/            # Data Models (SQLModel)
 
   │   │   └── ui-design/            # Component Architecture
-
   │   │
 
   │   └── 3-tasks/                  # STEP 3: EXECUTE (Atomic Units)
