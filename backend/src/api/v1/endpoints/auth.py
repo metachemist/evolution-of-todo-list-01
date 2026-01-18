@@ -47,24 +47,19 @@ async def signup(
         created_user = await auth_service.register_user(session, user_create)
 
         if not created_user:
+            # Use generic error message to prevent user enumeration
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
+                detail="Registration failed"
             )
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
+            detail="Registration failed"
         )
 
     # Return public user data (without password)
-    return UserPublic.from_orm(created_user) if hasattr(UserPublic, 'from_orm') else UserPublic(
-        id=created_user.id,
-        email=created_user.email,
-        name=created_user.name,
-        created_at=created_user.created_at,
-        updated_at=created_user.updated_at
-    )
+    return UserPublic.from_orm(created_user)
 
 
 @router.post("/login", response_model=Token)
@@ -93,6 +88,7 @@ async def login(
     # Authenticate the user using the service
     user = await auth_service.authenticate_user(session, form_data.username, form_data.password)
     if not user:
+        # Use generic error message to prevent user enumeration
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -120,13 +116,7 @@ async def get_current_user_profile(
     """
     # Return the current user's public data
     # The user is already fetched and validated by the get_current_user dependency
-    return UserPublic.from_orm(current_user) if hasattr(UserPublic, 'from_orm') else UserPublic(
-        id=current_user.id,
-        email=current_user.email,
-        name=current_user.name,
-        created_at=current_user.created_at,
-        updated_at=current_user.updated_at
-    )
+    return UserPublic.from_orm(current_user)
 
 
 @router.post("/signout")
@@ -185,10 +175,4 @@ async def update_user_profile(
             detail=str(e)
         )
 
-    return UserPublic.from_orm(updated_user) if hasattr(UserPublic, 'from_orm') else UserPublic(
-        id=updated_user.id,
-        email=updated_user.email,
-        name=updated_user.name,
-        created_at=updated_user.created_at,
-        updated_at=updated_user.updated_at
-    )
+    return UserPublic.from_orm(updated_user)

@@ -10,6 +10,8 @@ from src.models.user import User
 from src.db.session import get_session
 from src.services.task_service import TaskService
 from src.api.deps import get_current_user
+import hashlib
+import json
 
 # Initialize rate limiter for task endpoints
 limiter = Limiter(key_func=get_remote_address)
@@ -38,7 +40,21 @@ async def create_task(
     Returns:
         TaskPublic: The created task data
     """
+    # Check for idempotency key in headers
+    idempotency_key = request.headers.get("Idempotency-Key")
+
     task_service = TaskService()
+
+    if idempotency_key:
+        # Create a hash of the request data combined with user ID for uniqueness
+        request_data = {
+            "user_id": str(current_user.id),
+            "task_create": task_create.dict()
+        }
+        request_hash = hashlib.sha256(json.dumps(request_data, sort_keys=True).encode()).hexdigest()
+
+        # Check if this exact request was made before with this idempotency key
+        # In a real implementation, we'd store this in Redis or DB
 
     try:
         # Create the task using the service

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "7860:7860"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://todo_user:todo_password@db:5432/todo_db
+      - SECRET_KEY=JmFa-y28nGcKvfHka8Hb6-QhKa9d7j7at3qvnrF44jo
+      - ACCESS_TOKEN_EXPIRE_MINUTES=10080
+    depends_on:
+      - db
+    networks:
+      - todo_network
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_DB=todo_db
+      - POSTGRES_USER=todo_user
+      - POSTGRES_PASSWORD=todo_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - todo_network
+
+volumes:
+  postgres_data:
+
+networks:
+  todo_network:
+    driver: bridge

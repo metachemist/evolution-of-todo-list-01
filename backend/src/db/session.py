@@ -17,19 +17,34 @@ if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is required but not set")
 
 # Create the async engine
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=True,  # Set to True for SQL query logging in development
-    pool_size=10,  # Connection pool size (10-20 as specified in plan)
-    max_overflow=30,  # Max overflow connections (as specified in plan)
-    pool_timeout=30,  # Connection timeout (as specified in plan)
-    pool_recycle=3600,  # Recycle connections after 1 hour
-    connect_args={
-        "server_settings": {
-            "application_name": "todo-evolution-app",
+if "sqlite" in DATABASE_URL.lower():
+    # SQLite-specific configuration
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=True,  # Set to True for SQL query logging in development
+        pool_size=5,  # SQLite has limited concurrency
+        max_overflow=10,  # Max overflow connections
+        pool_timeout=30,  # Connection timeout
+        pool_recycle=-1,  # Don't recycle SQLite connections
+        connect_args={
+            "check_same_thread": False  # Required for async operations
         }
-    }
-)
+    )
+else:
+    # PostgreSQL-specific configuration
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=True,  # Set to True for SQL query logging in development
+        pool_size=10,  # Connection pool size (10-20 as specified in plan)
+        max_overflow=30,  # Max overflow connections (as specified in plan)
+        pool_timeout=30,  # Connection timeout (as specified in plan)
+        pool_recycle=3600,  # Recycle connections after 1 hour
+        connect_args={
+            "server_settings": {
+                "application_name": "todo-evolution-app",
+            }
+        }
+    )
 
 # Create async session maker
 AsyncSessionLocal = sessionmaker(

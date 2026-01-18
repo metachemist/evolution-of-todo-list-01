@@ -1,5 +1,6 @@
 # [Task]: T-004 | [From]: specs/2-plan/phase-2-fullstack.md
 
+import logging
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Union, Optional, Any
@@ -16,9 +17,14 @@ load_dotenv()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
 
 # JWT settings
-SECRET_KEY = os.getenv("SECRET_KEY", "your-super-secret-key-change-in-production")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY environment variable must be set for security")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "10080"))  # 7 days
+
+# Set up logger
+logger = logging.getLogger(__name__)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -37,7 +43,11 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     """
+    DEPRECATED: Use src.utils.password.get_password_hash instead.
+    This function exists for backward compatibility but will be redirected.
+    
     Generate a hash for the given password.
+    Truncates password to 72 bytes if needed to comply with bcrypt limitations.
 
     Args:
         password: Plain text password to hash
@@ -45,7 +55,9 @@ def get_password_hash(password: str) -> str:
     Returns:
         Hashed password string
     """
-    return pwd_context.hash(password)
+    # Import the preferred implementation to avoid duplication and ensure consistency
+    from src.utils.password import get_password_hash as preferred_get_password_hash
+    return preferred_get_password_hash(password)
 
 
 def create_access_token(subject: Union[str, Any], expires_delta: Optional[timedelta] = None) -> str:

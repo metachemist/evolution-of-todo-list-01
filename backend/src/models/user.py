@@ -41,11 +41,11 @@ class User(UserBase, table=True):
         description="Hashed password for authentication"
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Timestamp when the user was created"
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Timestamp when the user was last updated"
     )
 
@@ -71,7 +71,9 @@ class UserCreate(SQLModel):
         description="User's display name"
     )
     password: str = Field(
-        description="Plain text password (will be hashed before storage)"
+        min_length=8,
+        max_length=70,
+        description="Plain text password (will be hashed before storage, max 70 bytes)"
     )
 
 
@@ -105,3 +107,14 @@ class UserPublic(UserBase):
     id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+
+    @classmethod
+    def from_orm(cls, obj):
+        """Convert from ORM object to Pydantic model."""
+        return cls(
+            id=obj.id,
+            email=obj.email,
+            name=obj.name,
+            created_at=obj.created_at,
+            updated_at=obj.updated_at
+        )

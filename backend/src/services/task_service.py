@@ -82,14 +82,7 @@ class TaskService:
         created_task = await self.task_repo.create_task(session, task)
 
         # Convert to public representation
-        return TaskPublic.from_orm(created_task) if hasattr(TaskPublic, 'from_orm') else TaskPublic(
-            id=created_task.id,
-            title=created_task.title,
-            description=created_task.description,
-            completed=created_task.completed,
-            created_at=created_task.created_at,
-            updated_at=created_task.updated_at
-        )
+        return TaskPublic.from_orm(created_task)
 
     async def list_tasks(self, session: AsyncSession, user_id: uuid.UUID, offset: int = 0, limit: int = 20) -> Tuple[List[TaskPublic], int]:
         """
@@ -176,11 +169,4 @@ class TaskService:
             return None
             
         # Convert to public representation
-        return TaskPublic.from_orm(updated_task) if hasattr(TaskPublic, 'from_orm') else TaskPublic(
-            id=updated_task.id,
-            title=updated_task.title,
-            description=updated_task.description,
-            completed=updated_task.completed,
-            created_at=updated_task.created_at,
-            updated_at=updated_task.updated_at
-        )
+        return TaskPublic.from_orm(updated_task)

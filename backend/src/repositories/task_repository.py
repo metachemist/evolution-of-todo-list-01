@@ -57,16 +57,7 @@ class TaskRepository:
         total_count = count_result.scalar()
 
         # Convert to public representation
-        task_list = [TaskPublic.from_orm(task) if hasattr(TaskPublic, 'from_orm') else
-                     TaskPublic(
-                         id=task.id,
-                         user_id=task.user_id,
-                         title=task.title,
-                         description=task.description,
-                         completed=task.completed,
-                         created_at=task.created_at,
-                         updated_at=task.updated_at
-                     ) for task in tasks]
+        task_list = [TaskPublic.from_orm(task) for task in tasks]
 
         return task_list, total_count
 
@@ -84,20 +75,11 @@ class TaskRepository:
         """
         statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
         result = await session.execute(statement)
-        task = result.first()
+        task = result.scalar_one_or_none()
 
         if task:
-            task = task.Task
             # Convert to public representation
-            return TaskPublic.from_orm(task) if hasattr(TaskPublic, 'from_orm') else TaskPublic(
-                id=task.id,
-                user_id=task.user_id,
-                title=task.title,
-                description=task.description,
-                completed=task.completed,
-                created_at=task.created_at,
-                updated_at=task.updated_at
-            )
+            return TaskPublic.from_orm(task)
         return None
 
     async def update_task(self, session: AsyncSession, task_id: int, user_id: uuid.UUID, update_data: TaskUpdate) -> Optional[TaskPublic]:
@@ -116,12 +98,10 @@ class TaskRepository:
         # Get the existing task
         statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
         result = await session.execute(statement)
-        task = result.first()
+        task = result.scalar_one_or_none()
 
         if not task:
             return None
-
-        task = task.Task
 
         # Update the task with provided values
         if update_data.title is not None:
@@ -132,22 +112,15 @@ class TaskRepository:
             task.completed = update_data.completed
 
         # Update the updated_at timestamp
-        task.updated_at = func.now()
+        from datetime import datetime, timezone
+        task.updated_at = datetime.now(timezone.utc)
 
         session.add(task)
         await session.commit()
         await session.refresh(task)
 
         # Convert to public representation
-        return TaskPublic.from_orm(task) if hasattr(TaskPublic, 'from_orm') else TaskPublic(
-            id=task.id,
-            user_id=task.user_id,
-            title=task.title,
-            description=task.description,
-            completed=task.completed,
-            created_at=task.created_at,
-            updated_at=task.updated_at
-        )
+        return TaskPublic.from_orm(task)
 
     async def delete_task(self, session: AsyncSession, task_id: int, user_id: uuid.UUID) -> bool:
         """
@@ -187,16 +160,15 @@ class TaskRepository:
         """
         statement = select(Task).where(Task.id == task_id, Task.user_id == user_id)
         result = await session.execute(statement)
-        task = result.first()
+        task = result.scalar_one_or_none()
 
         if not task:
             return None
 
-        task = task.Task
-
         # Toggle the completion status
         task.completed = not task.completed
-        task.updated_at = func.now()
+        from datetime import datetime, timezone
+        task.updated_at = datetime.now(timezone.utc)
 
         session.add(task)
         await session.commit()

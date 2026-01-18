@@ -1,5 +1,3 @@
-# [Task]: T-012 | [From]: specs/2-plan/phase-2-fullstack.md
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -51,11 +49,10 @@ app.add_middleware(SecurityHeadersMiddleware)
 # Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific frontend domains
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    # Add more specific configuration as needed
 )
 
 # Include API routers with rate limiting

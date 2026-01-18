@@ -49,7 +49,8 @@ class AuthService:
         # At least 8 characters, one uppercase, one lowercase, one digit
         if len(password) < 8:
             return False
-        # Bcrypt has a 72-byte limit, so we enforce a reasonable limit
+        # Bcrypt has a 72-byte limit, but newer passlib versions are stricter
+        # So we enforce a 70-byte limit to be safe
         if len(password.encode('utf-8')) > 70:
             return False
         if not re.search(r'[A-Z]', password):
@@ -92,7 +93,7 @@ class AuthService:
             raise ValueError("Invalid email format")
 
         if not self._validate_password(user_create.password):
-            raise ValueError("Password does not meet requirements (at least 8 characters, max 70 bytes, one uppercase, one lowercase, one digit)")
+            raise ValueError("Password does not meet requirements (at least 8 characters, max 72 bytes, one uppercase, one lowercase, one digit)")
 
         if not self._validate_name(user_create.name):
             raise ValueError("Name must be between 1 and 100 characters")

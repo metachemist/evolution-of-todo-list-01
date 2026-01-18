@@ -46,11 +46,11 @@ class Task(TaskBase, table=True):
         description="Foreign key linking to the owning user"
     )
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Timestamp when the task was created"
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        default_factory=lambda: datetime.now(timezone.utc),
         description="Timestamp when the task was last updated"
     )
 
@@ -98,3 +98,15 @@ class TaskPublic(TaskBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+    @classmethod
+    def from_orm(cls, obj):
+        """Convert from ORM object to Pydantic model."""
+        return cls(
+            id=obj.id,
+            title=obj.title,
+            description=obj.description,
+            completed=obj.completed,
+            created_at=obj.created_at,
+            updated_at=obj.updated_at
+        )
