@@ -1,14 +1,11 @@
 [project]
-name = "evolution-of-todo-list-01"
+name = "todo-evolution-backend"
 version = "0.1.0"
-description = "Todo Evolution - From CLI to Cloud-Native AI"
+description = "Backend API for the Todo Evolution project - Phase II Full-Stack Web Application"
 authors = [
     {name = "metachemist", email = "metachemist@example.com"}
 ]
 dependencies = [
-    "pydantic>=2.5.0",
-    "argparse>=1.4.0",
-    "pytest>=7.4.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
     "sqlmodel>=0.0.22",
@@ -17,6 +14,7 @@ dependencies = [
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
     "python-multipart>=0.0.20",
+    "pydantic>=2.10.3",
     "pydantic-settings>=2.6.1",
     "uuid>=1.30",
     "python-dotenv>=1.0.1",
@@ -27,14 +25,14 @@ readme = "README.md"
 requires-python = ">= 3.13"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [project.scripts]
-todo-cli = "src.main:main"
+todo-api = "src.main:app"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
