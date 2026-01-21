@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    
+    <button onclick="testAPI()">Test API Connection</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result">Testing API connection...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:7860/api/v1/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Using a deliberately invalid token to test the "Not authenticated" response
+                    }
+                });
+                
+                const data = await response.json();
+                const status = response.status;
+                
+                if (status === 401 || status === 403) {
+                    resultDiv.innerHTML = `<div class="result success">✅ API is reachable! Got expected "Not authenticated" response: ${JSON.stringify(data)}</div>`;
+                } else if (status === 200) {
+                    resultDiv.innerHTML = `<div class="result success">✅ API is reachable! Got user data: ${JSON.stringify(data)}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="result error">⚠️ API is reachable but got unexpected status ${status}: ${JSON.stringify(data)}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result error">❌ API connection failed: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
